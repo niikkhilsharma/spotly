@@ -20,14 +20,13 @@ export default function Footer() {
             <h1 className="text-3xl md:text-4xl font-medium">
               Find your perfect space, <br /> create unforgettable moments
             </h1>
-            <p className="my-4 text-lg">
+            <div className="my-4 text-lg">
               <h4 className="max-w-[70ch] font-normal">
-                {" "}
                 It’s more than just a booking – it’s where memories are made.
                 From grand weddings to lively parties and cozy gatherings, every
                 event is a chance to celebrate life.
               </h4>
-            </p>
+            </div>
             <button className="group mt-4 bg-orange-500 text-xl text-white px-6 py-3 rounded-full hover:bg-orange-600 hover:cursor-pointer transition duration-300">
               Book your venue{" "}
               <span className="transform inline-block transition duration-300 group-hover:translate-x-2 group-hover:scale-200 group-hover:font-bold group-hover:text-2xl">
