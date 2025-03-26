@@ -15,7 +15,6 @@ export default function List() {
 					alt="phone demo"
 					width={1920}
 					height={1118}
-					objectFit="cover"
 					className="rounded-2xl mx-auto w-2/3"
 				/>
 			</div>

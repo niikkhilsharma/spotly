@@ -1,6 +1,6 @@
 'use client'
 import { AlignJustify } from 'lucide-react'
-import MaxWidthWrapper from './homepage/wrapper'
+import MaxWidthWrapper from './homepage/MaxWidthWrapper'
 import { Button, buttonVariants } from './ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useScroll, useMotionValueEvent } from 'framer-motion'
@@ -27,7 +27,7 @@ export default function Navbar() {
 	return (
 		<div
 			className={cn(
-				'w-full border-b h-20 sticky top-0 z-20 bg-white transition-all duration-150',
+				'w-full border-b h-20 sticky top-0 z-20 bg-blur-2xl bg-white/80 transition-all duration-150',
 				isScrolled && 'shadow-md backdrop-blur-md'
 			)}>
 			<MaxWidthWrapper className="flex gap-4 items-center justify-between">

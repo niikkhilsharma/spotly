@@ -1,9 +1,8 @@
 import React from 'react'
-import Footer from '@/components/homepage/footer'
 import FAQ from '@/components/homepage/faq'
 import Features from '@/components/homepage/features'
 import Hero from '@/components/homepage/hero'
-import MaxWidthWrapper from '@/components/homepage/wrapper'
+import MaxWidthWrapper from '@/components/homepage/MaxWidthWrapper'
 import Sell from '@/components/homepage/sell'
 import Listings from '@/components/homepage/listings'
 

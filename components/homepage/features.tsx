@@ -1,45 +1,45 @@
 import React from 'react'
 import Image from 'next/image'
-import Wrapper from './wrapper'
+import Wrapper from './MaxWidthWrapper'
 export default function Features() {
 	const standOuts = [
 		{
 			heading: 'Wide Range of Options',
 			content: 'We offer a variety of venues and properties — from party halls to rental homes — all at competitive prices.',
-			image: '/assets/client.png',
+			image: '/homepage/connect0.avif',
 		},
 		{
 			heading: 'Expert Recommendations',
 			content: 'Our team understands the local market well and helps you find the perfect venue based on your preferences.',
-			image: '/assets/client2.png',
+			image: '/homepage/connect.avif',
 		},
 		{
 			heading: '24/7 Support',
 			content: 'Our dedicated support team is available around the clock to assist you with your booking or rental needs.',
-			image: '/assets/client.png',
+			image: '/homepage/connect2.avif',
 		},
 		{
 			heading: 'Seamless Booking Process',
 			content:
 				'Our intuitive booking system ensures a hassle-free experience, allowing you to secure your venue in just a few clicks.',
-			image: '/assets/client2.png',
+			image: '/homepage/connect3.avif',
 		},
 		{
 			heading: 'Seamless Booking Process',
 			content:
 				'Our intuitive booking system ensures a hassle-free experience, allowing you to secure your venue in just a few clicks.',
-			image: '/assets/client2.png',
+			image: '/homepage/connect4.avif',
 		},
 		{
 			heading: 'Seamless Booking Process',
 			content:
 				'Our intuitive booking system ensures a hassle-free experience, allowing you to secure your venue in just a few clicks.',
-			image: '/assets/client2.png',
+			image: '/homepage/connect5.avif',
 		},
 	]
 
 	return (
-		<div>
+		<div className="rounded-2xl overflow-hidden">
 			<div className="">
 				<div className="flex flex-col space-y-3 text-center font-medium  text-3xl">
 					<p className="text-5xl">
@@ -52,7 +52,7 @@ export default function Features() {
 					</p>
 				</div>
 			</div>
-			<div className="flex gap-4 mx-auto text-white py-10 overflow-x-scroll">
+			<div className="flex gap-4 mx-auto text-white py-10 rounded-2xl overflow-x-scroll">
 				{standOuts.map((item, index) => (
 					<div className="w-80 min-w-80 h-72 aspect-square relative rounded-2xl overflow-hidden" key={index}>
 						<Image

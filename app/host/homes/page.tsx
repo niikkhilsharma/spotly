@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import MaxWidthWrapper from '@/components/homepage/wrapper'
+import MaxWidthWrapper from '@/components/homepage/MaxWidthWrapper'
 import { Dot, Search } from 'lucide-react'
 import { Slider } from '@/components/ui/slider'
 import { Badge } from '@/components/ui/badge'
