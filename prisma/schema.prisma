@@ -14,13 +14,98 @@ enum RoleEnum {
 }
 
 model User {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   name        String
-  email       String   @unique
+  email       String     @unique
   password    String
   image       String?
   role        RoleEnum
   countryCode String
   phone       String
   dob         DateTime
+  Property    Property[]
+}
+
+model Property {
+  id           String        @id @default(cuid())
+  title        String
+  description  String
+  propertyType String
+  placeType    String
+  price        Int
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  address      Address?
+  basics       Basics?
+  amenities    Amenity[]
+  photos       Photo[]
+  security     Security?
+  verification Verification?
+  isApproved   Boolean       @default(false)
+  isActive     Boolean       @default(true)
+
+  @@index([userId])
+}
+
+model Address {
+  id         String   @id @default(cuid())
+  line1      String
+  line2      String?
+  district   String
+  city       String
+  state      String
+  pincode    String
+  lat        Float?
+  lng        Float?
+  propertyId String   @unique
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
+
+model Basics {
+  id         String   @id @default(cuid())
+  guests     Int
+  bedrooms   Int
+  beds       Int
+  bathrooms  Int
+  propertyId String   @unique
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
+
+model Amenity {
+  id         String     @id @default(cuid())
+  name       String
+  properties Property[]
+
+  @@unique([name])
+}
+
+model Photo {
+  id         String   @id @default(cuid())
+  url        String
+  order      Int
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+}
+
+model Security {
+  id              String   @id @default(cuid())
+  hasCamera       Boolean  @default(false)
+  hasNoiseMonitor Boolean  @default(false)
+  hasWeapons      Boolean  @default(false)
+  propertyId      String   @unique
+  property        Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
+
+model Verification {
+  id           String   @id @default(cuid())
+  photoUrl     String
+  documentType String
+  documentUrl  String
+  isVerified   Boolean  @default(false)
+  propertyId   String   @unique
+  property     Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }

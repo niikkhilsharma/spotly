@@ -54,12 +54,11 @@ export function LoginForm() {
 				description: 'You have been logged in successfully.',
 			})
 
-			router.push('/host/register')
+			router.push('/host/list-property')
 			router.refresh()
 		} catch (error) {
 			console.error('Login error:', error)
 			toast('Login failed', {
-				// description: error instanceof Error ? error.message : 'Invalid email or password.',
 				description: 'Invalid email or password.',
 			})
 		} finally {

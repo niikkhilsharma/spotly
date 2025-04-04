@@ -3,6 +3,7 @@ import { Mona_Sans } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/homepage/footer'
+import { Toaster } from '@/components/ui/sonner'
 
 const monaSans = Mona_Sans({
 	variable: '--font-mona-sans',
@@ -26,6 +27,7 @@ export default function RootLayout({
 				<Navbar />
 				{children}
 				<Footer />
+				<Toaster />
 			</body>
 		</html>
 	)
