@@ -14,8 +14,11 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export default function Navbar() {
+	const pathname = usePathname()
+	console.log(pathname)
 	const { scrollYProgress } = useScroll()
 	const [isScrolled, setIsScrolled] = React.useState(false)
 
@@ -37,32 +40,40 @@ export default function Navbar() {
 				<div>
 					<h3 className="font-semibold">Homes</h3>
 				</div>
-				<div className="flex gap-2 items-center justify-start">
-					<Link
-						href={'/host/homes'}
-						className={cn(buttonVariants({ variant: 'ghost' }), 'font-semibold text-sm rounded-full hover:cursor-pointer')}>
-						Spotly your home
-					</Link>
+				{pathname === '/host/homes' ? (
+					<div>
+						<Link href={'/host/login'} className={cn(buttonVariants({ variant: 'destructive' }), 'rounded-full')}>
+							Home Setup
+						</Link>
+					</div>
+				) : (
+					<div className="flex gap-2 items-center justify-start">
+						<Link
+							href={'/host/homes'}
+							className={cn(buttonVariants({ variant: 'secondary' }), 'font-semibold text-sm rounded-full hover:cursor-pointer')}>
+							Spotly your home
+						</Link>
 
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button variant={'outline'} className={cn('flex h-12 gap-3 hover:cursor-pointer items-center rounded-full')}>
-								<AlignJustify size={20} />
-								<Avatar>
-									<AvatarImage src="/assets/placeholder/profile.png" />
-									<AvatarFallback>CN</AvatarFallback>
-								</Avatar>
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent side="bottom" align="end" className="w-60">
-							<DropdownMenuItem>Login</DropdownMenuItem>
-							<DropdownMenuItem>Signup</DropdownMenuItem>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem>Spotly your house</DropdownMenuItem>
-							<DropdownMenuItem>Help Center</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
-				</div>
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button variant={'outline'} className={cn('flex h-12 gap-3 hover:cursor-pointer items-center rounded-full')}>
+									<AlignJustify size={20} />
+									<Avatar>
+										<AvatarImage src="/assets/placeholder/profile.png" />
+										<AvatarFallback>CN</AvatarFallback>
+									</Avatar>
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent side="bottom" align="end" className="w-60">
+								<DropdownMenuItem>Login</DropdownMenuItem>
+								<DropdownMenuItem>Signup</DropdownMenuItem>
+								<DropdownMenuSeparator />
+								<DropdownMenuItem>Spotly your house</DropdownMenuItem>
+								<DropdownMenuItem>Help Center</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
+					</div>
+				)}
 			</MaxWidthWrapper>
 		</div>
 	)

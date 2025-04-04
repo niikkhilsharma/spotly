@@ -48,7 +48,7 @@ export default function List() {
 			{/* Step Button */}
 			<div className="w-full flex justify-center items-center my-16">
 				<Button variant={'default'} className="rounded-full w-64 h-12 text-base">
-					Spotly Setup
+					Home Setup
 				</Button>
 			</div>
 

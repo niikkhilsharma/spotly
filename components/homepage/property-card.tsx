@@ -24,7 +24,7 @@ export default function PropertyCard({
 					alt={title}
 					width={500}
 					height={500}
-					className="rounded-2xl object-cover aspect-square hover:scale-125 transition-all duration-125"
+					className="rounded-2xl object-cover aspect-square hover:scale-125 transition-all duration-150"
 				/>
 				<div className="absolute top-4 left-4 bg-white text-black text-sm px-3 py-1 rounded-full shadow">{status}</div>
 			</div>

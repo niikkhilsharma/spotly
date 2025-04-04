@@ -1,4 +1,3 @@
-import React from 'react'
 import FAQ from '@/components/homepage/faq'
 import Features from '@/components/homepage/features'
 import Hero from '@/components/homepage/hero'
@@ -8,12 +7,14 @@ import Listings from '@/components/homepage/listings'
 
 export default function Home() {
 	return (
-		<MaxWidthWrapper>
-			<Hero />
-			<Features />
-			<Sell />
-			<Listings />
-			<FAQ />
-		</MaxWidthWrapper>
+		<>
+			<MaxWidthWrapper>
+				<Hero />
+				<Features />
+				<Sell />
+				<Listings />
+				<FAQ />
+			</MaxWidthWrapper>
+		</>
 	)
 }

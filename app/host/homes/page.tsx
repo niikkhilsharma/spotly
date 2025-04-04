@@ -7,12 +7,35 @@ import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import List from '@/components/host/homes/list'
 import FAQ from '@/components/host/homes/Faq'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
+const allCities = [
+	{ city: 'Jaipur', price: 800 },
+	{ city: 'Kota', price: 750 },
+	{ city: 'Gurugram', price: 1200 },
+	{ city: 'Ajmer', price: 700 },
+	{ city: 'Delhi', price: 1500 },
+	{ city: 'Mumbai', price: 1800 },
+	{ city: 'Pune', price: 1300 },
+	{ city: 'Bangalore', price: 1600 },
+	{ city: 'Hyderabad', price: 1400 },
+	{ city: 'Chennai', price: 1350 },
+	{ city: 'Kolkata', price: 1250 },
+	{ city: 'Ahmedabad', price: 1100 },
+	{ city: 'Surat', price: 1000 },
+	{ city: 'Chandigarh', price: 1150 },
+	{ city: 'Indore', price: 950 },
+	{ city: 'Lucknow', price: 1050 },
+]
 
 export default function Host() {
 	const [nights, setNights] = React.useState(17)
 	const [nightChanging, setNightChanging] = React.useState(false)
+	const [selectedCity, setSelectedCity] = React.useState('Jaipur')
+
 	const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
-	const pricePerNight = 500
+
+	const pricePerNight = allCities.find(city => city.city === selectedCity)?.price || 0
 	const totalPrice = nights * pricePerNight
 
 	const handleValueChange = (value: number[]) => {
@@ -30,7 +53,7 @@ export default function Host() {
 	}
 
 	return (
-		<MaxWidthWrapper className="">
+		<MaxWidthWrapper>
 			<div className="min-h-svh -mt-20 flex gap-4 items-center">
 				<div className="w-1/2">
 					<h1 className="text-6xl font-bold text-center">
@@ -49,7 +72,7 @@ export default function Host() {
 									<span>
 										<Dot size={16} />
 									</span>{' '}
-									₹2,224/night
+									₹{pricePerNight}/night
 								</div>
 								<p className="text-sm text-primary/80 tracking-wide">
 									Learn how we <span className="underline">estimate earnings</span>
@@ -70,13 +93,12 @@ export default function Host() {
 					</div>
 
 					{/* Input to select the city */}
-
 					<div className="w-full flex justify-center items-center">
 						<Dialog>
 							<DialogTrigger className="mx-auto rounded-full">
 								<div className="h-16 rounded-full border w-96 flex items-center justify-start px-4 hover:shadow-sm hover:cursor-pointer">
 									<Search />
-									<p className="ml-4 font-semibold">Jaipur</p>
+									<p className="ml-4 font-semibold">{selectedCity}</p>
 									<div className="text-foreground/80 text-sm tracking-wide flex gap-0 items-center">
 										<Dot size={16} />
 										<p>Entire Place</p>
@@ -87,9 +109,20 @@ export default function Host() {
 							</DialogTrigger>
 							<DialogContent>
 								<DialogHeader>
-									<DialogTitle>Are you absolutely sure?</DialogTitle>
+									<DialogTitle>Please select your city?</DialogTitle>
 									<DialogDescription>
-										This action cannot be undone. This will permanently delete your account and remove your data from our servers.
+										<Select defaultValue={allCities[0].city} onValueChange={value => setSelectedCity(value)} value={selectedCity}>
+											<SelectTrigger className="w-full">
+												<SelectValue placeholder="Jaipur" />
+											</SelectTrigger>
+											<SelectContent>
+												{allCities.map(item => (
+													<SelectItem onClick={() => setSelectedCity(item.city)} key={item.city} value={item.city}>
+														{item.city.slice(0, 1).toUpperCase() + item.city.slice(1)}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
 									</DialogDescription>
 								</DialogHeader>
 							</DialogContent>
@@ -102,7 +135,7 @@ export default function Host() {
 						width="600"
 						height="450"
 						style={{ border: 0, borderRadius: '0.5rem' }}
-						// allowFullScreen=""
+						allowFullScreen
 						loading="lazy"
 						referrerPolicy="no-referrer-when-downgrade"></iframe>
 				</div>

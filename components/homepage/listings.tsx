@@ -9,7 +9,7 @@ const listings = [
 		title: 'Maple Drive Estate',
 		location: 'New York',
 		status: 'Sale',
-		price: '$40',
+		price: '₹4000',
 		bedrooms: '2',
 	},
 
@@ -19,7 +19,7 @@ const listings = [
 		title: 'Maple Drive Estate',
 		location: 'New York',
 		status: 'Sale',
-		price: '$40',
+		price: '₹4000',
 		bedrooms: '2',
 	},
 	{
@@ -28,7 +28,7 @@ const listings = [
 		title: 'Maple Drive Estate',
 		location: 'New York',
 		status: 'Sale',
-		price: '$40',
+		price: '₹4000',
 		bedrooms: '2',
 	},
 	{
@@ -38,7 +38,7 @@ const listings = [
 		location: 'New York',
 		status: 'Sale',
 		bedrooms: '2',
-		price: '$40',
+		price: '₹4000',
 	},
 	{
 		id: 5,
@@ -46,7 +46,7 @@ const listings = [
 		title: 'Maple Drive Estate',
 		location: 'New York',
 		status: 'Sale',
-		price: '$40',
+		price: '₹4000',
 		bedrooms: '2',
 	},
 	{
@@ -55,7 +55,7 @@ const listings = [
 		title: 'Maple Drive Estate',
 		location: 'New York',
 		status: 'Sale',
-		price: '$40',
+		price: '₹4000',
 		bedrooms: '2',
 	},
 ]
