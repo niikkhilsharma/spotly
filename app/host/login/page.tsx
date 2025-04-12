@@ -2,8 +2,17 @@ import { LoginForm } from '@/components/host/login-form'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
+import { auth } from '@/auth'
+import { redirect } from 'next/navigation'
 
 export default async function LoginPage() {
+	const session = await auth()
+	const user = session?.user
+
+	if (user) {
+		return redirect('/host/list-property')
+	}
+
 	return (
 		<div className="container flex min-h-screen flex-col items-center justify-center mx-auto">
 			<div className="mx-auto w-full max-w-md space-y-6">
