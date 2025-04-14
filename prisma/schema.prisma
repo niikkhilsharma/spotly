@@ -7,19 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum RoleEnum {
-  ADMIN
-  SELLER
-  GUEST
-}
-
 model User {
   id          String     @id @default(cuid())
   name        String
   email       String     @unique
-  password    String
   image       String?
   role        RoleEnum
+  password    String
   countryCode String
   phone       String
   dob         DateTime
@@ -36,15 +30,15 @@ model Property {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   userId       String
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  address      Address?
-  basics       Basics?
-  amenities    Amenity[]
-  photos       Photo[]
-  security     Security?
-  verification Verification?
   isApproved   Boolean       @default(false)
   isActive     Boolean       @default(true)
+  address      Address?
+  basics       Basics?
+  photos       Photo[]
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  security     Security?
+  verification Verification?
+  amenities    Amenity[]     @relation("AmenityToProperty")
 
   @@index([userId])
 }
@@ -75,10 +69,8 @@ model Basics {
 
 model Amenity {
   id         String     @id @default(cuid())
-  name       String
-  properties Property[]
-
-  @@unique([name])
+  name       String     @unique
+  properties Property[] @relation("AmenityToProperty")
 }
 
 model Photo {
@@ -108,4 +100,10 @@ model Verification {
   isVerified   Boolean  @default(false)
   propertyId   String   @unique
   property     Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
+
+enum RoleEnum {
+  ADMIN
+  SELLER
+  GUEST
 }
