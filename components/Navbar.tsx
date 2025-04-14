@@ -18,12 +18,10 @@ import { usePathname } from 'next/navigation'
 
 export default function Navbar() {
 	const pathname = usePathname()
-	console.log(pathname)
 	const { scrollYProgress } = useScroll()
 	const [isScrolled, setIsScrolled] = React.useState(false)
 
 	useMotionValueEvent(scrollYProgress, 'change', scrollYProgress => {
-		console.log(scrollYProgress > 0.03, scrollYProgress)
 		setIsScrolled(scrollYProgress > 0.03)
 	})
 

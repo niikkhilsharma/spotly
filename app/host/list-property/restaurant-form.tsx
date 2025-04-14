@@ -1,3 +1,5 @@
+'use client'
+
 export default function RestaurantForm() {
-	return <div>Restaurant Form</div>
+	return <div className="p-4">Restaurant Form</div>
 }
