@@ -38,7 +38,9 @@ export default function Navbar() {
 					<h1 className="text-4xl font-bold italic">Spotly</h1>
 				</Link>
 				<div>
+				<Link href={'/'}>
 					<h3 className="font-semibold">Homes</h3>
+					</Link>
 				</div>
 				{pathname === '/host/homes' ? (
 					<div>
