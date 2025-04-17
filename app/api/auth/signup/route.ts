@@ -20,7 +20,7 @@ const registerSchema = z.object({
 	dateOfBirth: z.string().refine(val => !isNaN(Date.parse(val)), {
 		message: 'Invalid date format',
 	}),
-	role: z.string().refine(val => val === 'SELLER' || val === 'GUEST', {
+	role: z.string().refine(val => val === 'SELLER' || val === 'GUEST' || val === 'ADMIN', {
 		message: 'Invalid role',
 	}),
 })

@@ -1,5 +1,5 @@
 import MaxWidthWrapper from '@/components/homepage/MaxWidthWrapper'
-import { SignupForm } from '@/components/host/signup'
+import { SignupForm } from '@/app/host/signup/signup'
 
 export default function Register() {
 	return (

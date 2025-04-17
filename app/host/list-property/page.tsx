@@ -30,14 +30,14 @@ export default function ListPropertyPage() {
 					onClick={() => setSelectedProperty('Marriage Garden')}>
 					Marriage Garden
 				</div>
-				<div
+				{/* <div
 					className={cn(
 						'border p-4 rounded-md w-44 h-20 flex justify-center items-center text-center hover:bg-foreground/10 hover:cursor-pointer',
 						selectedProperty === 'Restaurant' && 'bg-foreground/10'
 					)}
 					onClick={() => setSelectedProperty('Restaurant')}>
 					Restaurant
-				</div>
+				</div> */}
 			</div>
 
 			{selectedProperty && (

@@ -5,7 +5,7 @@ import MaxWidthWrapper from '@/components/homepage/MaxWidthWrapper'
 import Sell from '@/components/homepage/sell'
 import Listings from '@/components/homepage/listings'
 
-export default function Home() {
+export default async function Home() {
 	return (
 		<>
 			<MaxWidthWrapper>
