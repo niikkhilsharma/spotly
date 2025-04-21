@@ -5,7 +5,7 @@ import { Separator } from '../ui/separator'
 export default function Footer() {
 	return (
 		<div>
-			<MaxWidthWrapper className="bg-white text-black ">
+			<MaxWidthWrapper className="bg-white text-black">
 				{/* Hero Section */}
 				<div className="relative w-full h-[600px] bg-black mx-auto rounded-3xl overflow-hidden text-white">
 					<Image
@@ -17,16 +17,16 @@ export default function Footer() {
 						className="absolute inset-0 w-full h-full object-cover opacity-30"
 					/>
 					<div className="relative z-10 flex flex-col items-center space-y-4 justify-center h-full text-center px-4">
-						<h1 className="text-3xl md:text-4xl font-medium">
+						<h1 className="text-3xl sm:text-4xl md:text-5xl font-medium">
 							Find your perfect space, <br /> create unforgettable moments
 						</h1>
-						<div className="my-4 text-lg">
+						<div className="my-4 text-base sm:text-lg">
 							<h4 className="max-w-[70ch] font-normal">
 								It’s more than just a booking – it’s where memories are made. From grand weddings to lively parties and cozy
 								gatherings, every event is a chance to celebrate life.
 							</h4>
 						</div>
-						<button className="group mt-4 bg-orange-500 text-xl text-white px-6 py-3 rounded-full hover:bg-orange-600 hover:cursor-pointer transition duration-300">
+						<button className="group mt-4 bg-orange-500 text-base sm:text-lg md:text-xl text-white px-6 py-3 rounded-full hover:bg-orange-600 transition duration-300">
 							Book your venue
 							<span className="transform inline-block ml-2 transition duration-300 group-hover:translate-x-2 group-hover:scale-125 group-hover:font-bold">
 								→
@@ -36,25 +36,26 @@ export default function Footer() {
 				</div>
 
 				{/* Footer Links Section */}
-				<div className=" mx-4 px-4 py-10 flex justify-between items-center gap-6">
+				<div className="mx-4 px-4 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 					{/* Company Info */}
-					<div className="max-w-[55ch]">
+					<div className="max-w-[60ch]">
 						<h2 className="text-2xl font-semibold">Spotly</h2>
-						<div className="text-base mt-2 ">
+						<div className="text-base mt-2">
 							<span className="text-orange-500 font-medium">Spotly</span> is a leading platform for booking and managing properties,
 							transforming the way people find and book spaces for living and celebrations through innovative design and technology.
 							For buyers and sellers, we simplify the process by helping you find the right property, handling negotiations, and
-							ensuring a smooth transaction. . From budget-friendly rentals to premium venues for events,{' '}
+							ensuring a smooth transaction. From budget-friendly rentals to premium venues for events,{' '}
 							<span className="text-orange-500 font-medium">Spotly</span> has something for everyone—your perfect space is just a
-							step away. <br />
-							<h2 className="mt-5">
-								{' '}
-								<span className="tetx-lg font-medium "> Popular Locations:</span> Jaipur | Delhi | Mumbai | Hyderabad | Pune | Noida
-								| Gurugram | Bangalore | Indore | Thane
+							step away.
+							<h2 className="mt-5 font-medium">
+								Popular Locations: <br />{' '}
+								<span className="font-normal">
+									Jaipur | Delhi | Mumbai | Hyderabad | Pune | Noida | Gurugram | Bangalore | Indore | Thane
+								</span>
 							</h2>
 						</div>
-						<p className="text-base mt-1">+1 646-598-7983</p>
-						<div className="flex space-x-4 mt-4">
+						<p className="text-base mt-3">+1 646-598-7983</p>
+						<div className="flex space-x-4 mt-4 text-xl">
 							<a href="#" aria-label="Facebook" className="hover:text-gray-500">
 								🔵
 							</a>
@@ -69,8 +70,8 @@ export default function Footer() {
 
 					{/* Page Links */}
 					<div>
-						<h3 className="text-2xl font-semibold">Pages</h3>
-						<ul className="mt-2 space-y-2">
+						<h3 className="text-xl font-semibold">Pages</h3>
+						<ul className="mt-2 space-y-2 text-base">
 							<li>
 								<a href="#" className="hover:text-gray-500">
 									Bookings
@@ -96,8 +97,8 @@ export default function Footer() {
 
 					{/* Resources */}
 					<div>
-						<h3 className="text-2xl font-semibold">Resources</h3>
-						<ul className="mt-2 space-y-2">
+						<h3 className="text-xl font-semibold">Resources</h3>
+						<ul className="mt-2 space-y-2 text-base">
 							<li>
 								<a href="#" className="hover:text-gray-500">
 									List Your Property
@@ -123,8 +124,8 @@ export default function Footer() {
 
 					{/* Popular Locations */}
 					<div>
-						<h3 className="text-2xl font-semibold">Popular Locations</h3>
-						<ul className="mt-2 space-y-2">
+						<h3 className="text-xl font-semibold">Popular Locations</h3>
+						<ul className="mt-2 space-y-2 text-base">
 							<li>
 								<a href="#" className="hover:text-gray-500">
 									Jaipur
@@ -158,7 +159,7 @@ export default function Footer() {
 			{/* Bottom Footer */}
 			<Separator />
 			<MaxWidthWrapper>
-				<div className="py-8 text-center text-sm">
+				<div className="py-8 text-center text-sm px-4">
 					&copy; Copyright 2024 &nbsp; | &nbsp;
 					<a href="#" className="hover:text-gray-500">
 						Privacy Policy
