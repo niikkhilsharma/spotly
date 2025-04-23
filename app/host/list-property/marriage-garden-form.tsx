@@ -9,9 +9,12 @@ import { useRouter } from 'next/navigation'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
 import { X, Upload, CheckCircle, AlertCircle } from 'lucide-react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+
 
 interface GardenData {
+	 comboPackage: string;
+     customPrice?: string;
 	propertyType: string
 	state: string
 	district: string
@@ -19,6 +22,12 @@ interface GardenData {
 	pincode: string
 	propertyDocuments: File | null
 	hostingFacilities: string[]
+	decorationType: string // Added decoration type field
+	cateringOptions: {
+		fiveStar: string[]
+		threeStar: string[]
+		oneStar: string[]
+	}
 	contact: string
 	noc: File | null
 	fireCert: File | null
@@ -95,6 +104,12 @@ export default function MarriageGardenForm() {
 		pincode: '',
 		propertyDocuments: null,
 		hostingFacilities: [],
+		decorationType: '', // Initialize decoration type field
+		cateringOptions: {
+			fiveStar: [],
+			threeStar: [],
+			oneStar: []
+		},
 		contact: '',
 		noc: null,
 		fireCert: null,
@@ -166,6 +181,25 @@ export default function MarriageGardenForm() {
 		})
 	}
 
+	const handleCateringOptionToggle = (starLevel: 'fiveStar' | 'threeStar' | 'oneStar', foodType: string) => {
+		setGardenData(prev => {
+			const currentOptions = [...prev.cateringOptions[starLevel]];
+			const isSelected = currentOptions.includes(foodType);
+			
+			const updatedOptions = isSelected
+				? currentOptions.filter(type => type !== foodType)
+				: [...currentOptions, foodType];
+			
+			return {
+				...prev,
+				cateringOptions: {
+					...prev.cateringOptions,
+					[starLevel]: updatedOptions
+				}
+			};
+		});
+	};
+
 	// Open confirmation dialog instead of direct submission
 	const openConfirmDialog = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
@@ -202,6 +236,11 @@ export default function MarriageGardenForm() {
 		formData.append('pincode', gardenData.pincode)
 		formData.append('contact', gardenData.contact)
 		formData.append('title', gardenData.title)
+		formData.append('decorationType', gardenData.decorationType) // Added decoration type
+		formData.append('comboPackage', gardenData.comboPackage)
+		if (gardenData.customPrice) {
+		  formData.append('customPrice', gardenData.customPrice)
+		}
 
 		formData.append('propertyDocuments', gardenData.propertyDocuments!)
 		gardenData.noc && formData.append('noc', gardenData.noc)
@@ -209,6 +248,22 @@ export default function MarriageGardenForm() {
 		gardenData.fssaiCert && formData.append('fssaiCert', gardenData.fssaiCert)
 		gardenData.marriageNoc && formData.append('marriageNoc', gardenData.marriageNoc)
 		gardenData.hostingFacilities.forEach(facility => formData.append('hostingFacilities', facility))
+		
+		// Add catering options to form data
+		// For 5 Star options
+		gardenData.cateringOptions.fiveStar.forEach(option => {
+			formData.append('cateringOptions.fiveStar', option)
+		});
+		
+		// For 3 Star options
+		gardenData.cateringOptions.threeStar.forEach(option => {
+			formData.append('cateringOptions.threeStar', option)
+		});
+		
+		// For 1 Star options
+		gardenData.cateringOptions.oneStar.forEach(option => {
+			formData.append('cateringOptions.oneStar', option)
+		});
 
 		// Append venue images
 		gardenData.venueImages.forEach(image => {
@@ -237,7 +292,7 @@ export default function MarriageGardenForm() {
 	}
 
 	// Step validation
-	const canAdvanceFromStep1 = gardenData.propertyType && gardenData.hostingFacilities.length > 0
+	const canAdvanceFromStep1 = gardenData.propertyType && gardenData.hostingFacilities.length > 0 && gardenData.decorationType && gardenData.comboPackage 
 	const canAdvanceFromStep2 = gardenData.state && gardenData.district && gardenData.pincode
 	const canAdvanceFromStep3 = gardenData.venueImages.length > 0 && gardenData.title
 
@@ -269,6 +324,33 @@ export default function MarriageGardenForm() {
 								</SelectContent>
 							</Select>
 						</div>
+
+						{/* Decoration Type */}
+<div>
+  <Label htmlFor="decorationType" className="text-sm font-medium">
+    Decoration Type
+  </Label>
+  <Select
+    value={gardenData.decorationType}
+    onValueChange={value => setGardenData({ ...gardenData, decorationType: value })}>
+    <SelectTrigger id="decorationType" className="w-full mt-1">
+      <SelectValue placeholder="Select Decoration Type" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="Exclusive">Exclusive(Full)</SelectItem>
+      <SelectItem value="Standard">Standard(semi)</SelectItem>
+      <SelectItem value="Basic">Basic(necessary)</SelectItem>
+    </SelectContent>
+  </Select>
+  <p className="text-xs text-gray-500 mt-1">
+    Exclusive: Premium decorations with elaborate themes and customization options
+    <br />
+    Standard: Mid-range decorations with some customization options
+    <br />
+    Basic: Standard decorations for simpler events
+  </p>
+</div>
+
 
 						{/* Contact */}
 						<div>
@@ -308,6 +390,352 @@ export default function MarriageGardenForm() {
 								<div className="mt-2 text-sm text-gray-500">Selected: {gardenData.hostingFacilities.join(', ')}</div>
 							)}
 						</div>
+
+{/* Catering Options */}
+<div className="mt-6">
+  <Label className="text-sm font-medium block mb-2">Catering Services</Label>
+  
+  {/* Package Selection with Select All Feature */}
+  <div className="mb-4">
+    <h3 className="text-sm font-medium text-gray-700 mb-2">Select Catering Packages</h3>
+    <div className="flex flex-wrap gap-2">
+      {['5 Star', '3 Star', '1 Star'].map((rating) => {
+        const ratingKey = rating === '5 Star' ? 'fiveStar' : rating === '3 Star' ? 'threeStar' : 'oneStar';
+        const hasAllOptions = ['Veg', 'Non-Veg', 'Jain'].every(option => 
+          gardenData.cateringOptions[ratingKey].includes(option)
+        );
+        const hasAnyOption = gardenData.cateringOptions[ratingKey].length > 0;
+        
+        return (
+          <Button
+            key={`rating-${rating}`}
+            type="button"
+            size="sm"
+            variant="outline"
+            className={cn(
+              'transition border-gray-300',
+              hasAnyOption
+                ? 'bg-blue-50 text-blue-700 border-blue-300'
+                : 'hover:bg-gray-50'
+            )}
+            onClick={() => {
+              // If all options are already selected, clear them
+              // Otherwise, select all options
+              if (hasAllOptions) {
+                setGardenData({
+                  ...gardenData,
+                  cateringOptions: {
+                    ...gardenData.cateringOptions,
+                    [ratingKey]: []
+                  }
+                });
+              } else {
+                setGardenData({
+                  ...gardenData,
+                  cateringOptions: {
+                    ...gardenData.cateringOptions,
+                    [ratingKey]: ['Veg', 'Non-Veg', 'Jain']
+                  }
+                });
+              }
+            }}>
+            {rating}
+          </Button>
+        );
+      })}
+    </div>
+    <p className="text-xs text-gray-500 mt-1">
+      Click a package to select all food options, or click again to clear.
+    </p>
+  </div>
+  
+  {/* 5 Star Food Options */}
+  {gardenData.cateringOptions.fiveStar.length > 0 && (
+    <div className="mb-6 ml-4 p-3 border-l-2 border-blue-200">
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="text-sm font-medium text-gray-700">5 Star Food Options</h3>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          className="text-xs h-7"
+          onClick={() => {
+            setGardenData({
+              ...gardenData,
+              cateringOptions: {
+                ...gardenData.cateringOptions,
+                fiveStar: []
+              }
+            });
+          }}>
+          Clear All
+        </Button>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {['Veg', 'Non-Veg', 'Jain'].map((foodType) => (
+          <Button
+            key={`5star-${foodType}`}
+            type="button"
+            size="sm"
+            variant="outline"
+            className={cn(
+              'transition border-gray-300',
+              gardenData.cateringOptions.fiveStar.includes(foodType)
+                ? 'bg-blue-50 text-blue-700 border-blue-300'
+                : 'hover:bg-gray-50'
+            )}
+            onClick={() => handleCateringOptionToggle('fiveStar', foodType)}>
+            {foodType}
+          </Button>
+        ))}
+      </div>
+      <div className="mt-2 text-sm text-gray-500">
+        Selected: {gardenData.cateringOptions.fiveStar.join(', ')}
+      </div>
+    </div>
+  )}
+  
+  {/* 3 Star Food Options */}
+  {gardenData.cateringOptions.threeStar.length > 0 && (
+    <div className="mb-6 ml-4 p-3 border-l-2 border-blue-200">
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="text-sm font-medium text-gray-700">3 Star Food Options</h3>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          className="text-xs h-7"
+          onClick={() => {
+            setGardenData({
+              ...gardenData,
+              cateringOptions: {
+                ...gardenData.cateringOptions,
+                threeStar: []
+              }
+            });
+          }}>
+          Clear All
+        </Button>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {['Veg', 'Non-Veg', 'Jain'].map((foodType) => (
+          <Button
+            key={`3star-${foodType}`}
+            type="button"
+            size="sm"
+            variant="outline"
+            className={cn(
+              'transition border-gray-300',
+              gardenData.cateringOptions.threeStar.includes(foodType)
+                ? 'bg-blue-50 text-blue-700 border-blue-300'
+                : 'hover:bg-gray-50'
+            )}
+            onClick={() => handleCateringOptionToggle('threeStar', foodType)}>
+            {foodType}
+          </Button>
+        ))}
+      </div>
+      <div className="mt-2 text-sm text-gray-500">
+        Selected: {gardenData.cateringOptions.threeStar.join(', ')}
+      </div>
+    </div>
+  )}
+  
+  {/* 1 Star Food Options */}
+  {gardenData.cateringOptions.oneStar.length > 0 && (
+    <div className="mb-6 ml-4 p-3 border-l-2 border-blue-200">
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="text-sm font-medium text-gray-700">1 Star Food Options</h3>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          className="text-xs h-7"
+          onClick={() => {
+            setGardenData({
+              ...gardenData,
+              cateringOptions: {
+                ...gardenData.cateringOptions,
+                oneStar: []
+              }
+            });
+          }}>
+          Clear All
+        </Button>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {['Veg', 'Non-Veg', 'Jain'].map((foodType) => (
+          <Button
+            key={`1star-${foodType}`}
+            type="button"
+            size="sm"
+            variant="outline"
+            className={cn(
+              'transition border-gray-300',
+              gardenData.cateringOptions.oneStar.includes(foodType)
+                ? 'bg-blue-50 text-blue-700 border-blue-300'
+                : 'hover:bg-gray-50'
+            )}
+            onClick={() => handleCateringOptionToggle('oneStar', foodType)}>
+            {foodType}
+          </Button>
+        ))}
+      </div>
+      <div className="mt-2 text-sm text-gray-500">
+        Selected: {gardenData.cateringOptions.oneStar.join(', ')}
+      </div>
+    </div>
+  )}
+
+  {/* Selected options summary */}
+  {(gardenData.cateringOptions.fiveStar.length > 0 ||
+    gardenData.cateringOptions.threeStar.length > 0 ||
+    gardenData.cateringOptions.oneStar.length > 0) && (
+    <div className="mt-4 p-3 bg-gray-50 border border-gray-200 rounded-md">
+      <h4 className="text-sm font-medium text-gray-700 mb-1">Selected Catering Options:</h4>
+      {gardenData.cateringOptions.fiveStar.length > 0 && (
+        <div className="text-sm">5 Star: {gardenData.cateringOptions.fiveStar.join(', ')}</div>
+      )}
+      {gardenData.cateringOptions.threeStar.length > 0 && (
+        <div className="text-sm">3 Star: {gardenData.cateringOptions.threeStar.join(', ')}</div>
+      )}
+      {gardenData.cateringOptions.oneStar.length > 0 && (
+        <div className="text-sm">1 Star: {gardenData.cateringOptions.oneStar.join(', ')}</div>
+      )}
+    </div>
+  )}
+</div>
+{/* Garden Combo Packages */}
+<div className="mb-6">
+  <Label className="text-sm font-medium block mb-2">Garden Combo Packages</Label>
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    {/* Basic Combo */}
+    <Card className={cn(
+      "cursor-pointer transition-all border-2",
+      gardenData.comboPackage === "Basic" ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-blue-300"
+    )}
+    onClick={() => setGardenData({
+      ...gardenData,
+      comboPackage: "Basic",
+      decorationType: "",
+      cateringOptions: { fiveStar: [], threeStar: [], oneStar: [] }
+    })}>
+      <CardContent className="p-4">
+        <h3 className="font-medium text-gray-800">Basic Combo</h3>
+        <p className="text-sm text-gray-600 mt-1">Garden Only</p>
+        <ul className="mt-2 text-xs text-gray-500 space-y-1">
+          <li>• Venue space only</li>
+          <li>• No decoration included</li>
+          <li>• No catering services</li>
+          <li>• Most affordable option</li>
+        </ul>
+      </CardContent>
+    </Card>
+
+    {/* Standard Combo */}
+    <Card className={cn(
+      "cursor-pointer transition-all border-2",
+      gardenData.comboPackage === "Standard" ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-blue-300"
+    )}
+    onClick={() => setGardenData({
+      ...gardenData,
+      comboPackage: "Standard",
+      decorationType: "Basic",
+      cateringOptions: { fiveStar: [], threeStar: [], oneStar: [] }
+    })}>
+      <CardContent className="p-4">
+        <h3 className="font-medium text-gray-800">Standard Combo</h3>
+        <p className="text-sm text-gray-600 mt-1">Garden + Basic Decoration</p>
+        <ul className="mt-2 text-xs text-gray-500 space-y-1">
+          <li>• Full venue access</li>
+          <li>• Basic decoration package</li>
+          <li>• No catering included</li>
+          <li>• Good for small gatherings</li>
+        </ul>
+      </CardContent>
+    </Card>
+
+    {/* Premium Combo */}
+    <Card className={cn(
+      "cursor-pointer transition-all border-2",
+      gardenData.comboPackage === "Premium" ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-blue-300"
+    )}
+    onClick={() => setGardenData({
+      ...gardenData,
+      comboPackage: "Premium",
+      decorationType: "Exclusive",
+      cateringOptions: { fiveStar: ['Veg'], threeStar: [], oneStar: [] }
+    })}>
+      <CardContent className="p-4">
+        <h3 className="font-medium text-gray-800">Premium Combo</h3>
+        <p className="text-sm text-gray-600 mt-1">Garden + Catering + Exclusive Decoration</p>
+        <ul className="mt-2 text-xs text-gray-500 space-y-1">
+          <li>• Complete venue experience</li>
+          <li>• Exclusive decoration package</li>
+          <li>• 5-Star vegetarian catering</li>
+          <li>• Perfect for luxury weddings</li>
+        </ul>
+      </CardContent>
+    </Card>
+
+    {/* Custom Combo */}
+    <Card className={cn(
+      "cursor-pointer transition-all border-2",
+      gardenData.comboPackage === "Custom" ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-blue-300"
+    )}
+    onClick={() => setGardenData({
+      ...gardenData,
+      comboPackage: "Custom"
+    })}>
+      <CardContent className="p-4">
+        <h3 className="font-medium text-gray-800">Custom Combo</h3>
+        <p className="text-sm text-gray-600 mt-1">Design Your Own Package</p>
+        <ul className="mt-2 text-xs text-gray-500 space-y-1">
+          <li>• Fully customizable options</li>
+          <li>• Mix and match services</li>
+          <li>• Define your own pricing</li>
+          <li>• Maximum flexibility</li>
+        </ul>
+      </CardContent>
+    </Card>
+  </div>
+  
+  {/* Custom pricing field appears only when Custom combo is selected */}
+  {gardenData.comboPackage === "Custom" && (
+    <div className="mt-4">
+      <Label htmlFor="customPrice" className="text-sm font-medium">
+        Custom Package Base Price (₹)
+      </Label>
+      <Input
+        id="customPrice"
+        type="number"
+        placeholder="Enter your base price"
+        value={gardenData.customPrice || ''}
+        onChange={e => setGardenData({ ...gardenData, customPrice: e.target.value })}
+        className="mt-1"
+      />
+      <p className="text-xs text-gray-500 mt-1">
+        Set a base price for your custom package. Additional services will adjust the final price.
+      </p>
+    </div>
+  )}
+  
+  {/* Show message about selection affecting other options */}
+  {gardenData.comboPackage && (
+    <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+      <div className="flex items-start gap-2">
+        <CheckCircle size={18} className="text-blue-500 mt-0.5" />
+        <div className="text-sm text-blue-800">
+          <p className="font-medium">
+            {gardenData.comboPackage === "Custom" 
+              ? "Custom combo selected. You can now customize all options below."
+              : `${gardenData.comboPackage} combo selected. Some options have been preset based on your selection.`}
+          </p>
+        </div>
+      </div>
+    </div>
+  )}
+</div>
 					</div>
 				)
 			case 2:
@@ -586,8 +1014,31 @@ export default function MarriageGardenForm() {
 											<span className="font-medium text-gray-500">Facilities:</span> {gardenData.hostingFacilities.join(', ')}
 										</div>
 										<div className="sm:col-span-2">
-											<span className="font-medium text-gray-500">Photos:</span> {gardenData.venueImages.length} uploaded
+											<span className="font-medium text-gray-500">Catering:</span>
+											{gardenData.cateringOptions.fiveStar.length > 0 && (
+												<span> 5★ ({gardenData.cateringOptions.fiveStar.join(', ')})</span>
+											)}
+											{gardenData.cateringOptions.threeStar.length > 0 && (
+												<span> • 3★ ({gardenData.cateringOptions.threeStar.join(', ')})</span>
+											)}
+											{gardenData.cateringOptions.oneStar.length > 0 && (
+												<span> • 1★ ({gardenData.cateringOptions.oneStar.join(', ')})</span>
+											)}
+											{gardenData.cateringOptions.fiveStar.length === 0 && 
+											gardenData.cateringOptions.threeStar.length === 0 && 
+											gardenData.cateringOptions.oneStar.length === 0 && (
+												<span> None selected</span>
+											)}
 										</div>
+										<div className="sm:col-span-2">
+  <span className="font-medium text-gray-500">Decoration Type:</span> {gardenData.decorationType}
+</div>
+<div className="sm:col-span-2">
+  <span className="font-medium text-gray-500">Combo Package:</span> {gardenData.comboPackage}
+  {gardenData.comboPackage === "Custom" && gardenData.customPrice && (
+    <span> (Base Price: ₹{gardenData.customPrice})</span>
+  )}
+</div>
 									</div>
 
 									<div className="flex items-center gap-2 text-sm text-amber-600 pt-2 border-t">
