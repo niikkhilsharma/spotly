@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-import { ChangeEvent, FormEvent, useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import { cn } from '@/lib/utils'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { X, MapPin, Upload, CheckCircle, AlertCircle } from 'lucide-react'
 
 interface FlatData {
@@ -84,7 +84,7 @@ export default function FlatForm() {
 	]
 
 	// BHK options
-	const bhkOptions = ['1 BHK', '2 BHK', '3 BHK', '4 BHK', '5+ BHK', 'Studio']
+	const bhkOptions = ['1 BHK', '2 BHK', '3 BHK', '4 BHK']
 
 	const [flatData, setFlatData] = useState<FlatData>({
 		bhk: '',
@@ -164,10 +164,9 @@ export default function FlatForm() {
 	}
 
 	// Modified to just prepare for submission rather than submitting directly
-	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault()
-
-		// Instead of auto-submitting, show confirmation dialog or move to a confirmation step
+		// Show confirmation dialog
 		setShowConfirmation(true)
 	}
 
@@ -183,6 +182,12 @@ export default function FlatForm() {
 
 		if (flatData.amenities.length === 0) {
 			alert('Please select at least one amenity.')
+			setLoading(false)
+			return
+		}
+
+		if (!flatData.video || !flatData.nocDoc || !flatData.termsOfConditionsDoc) {
+			alert('Please upload all required documents before submitting.')
 			setLoading(false)
 			return
 		}
@@ -205,13 +210,27 @@ export default function FlatForm() {
 		flatData.video && formData.append('video', flatData.video)
 
 		console.log('Flat Data:', flatData)
+		console.log('Starting submission...')
 
 		try {
 			const response = await axios.post('/api/host/list-property/flat', formData)
 			const data = response.data
-			console.log(data)
+			console.log('Submission successful:', data)
 			alert('Submission successful')
-			router.push('/host/list-success')
+
+			// Use a small timeout to ensure the alert is processed before navigation
+			setTimeout(() => {
+				console.log('Navigating to success page...')
+				router.push('/host/list-success')
+
+				// Fallback navigation in case router.push doesn't work
+				setTimeout(() => {
+					if (window.location.pathname !== '/host/list-success') {
+						console.log('Using fallback navigation...')
+						window.location.href = '/host/list-success'
+					}
+				}, 500)
+			}, 100)
 		} catch (error) {
 			console.error('Error submitting form:', error)
 			alert('Error submitting form. Please try again.')
@@ -579,30 +598,32 @@ export default function FlatForm() {
 		}
 	}
 
-	// Render confirmation dialog if needed
+	// Render confirmation dialog
 	const renderConfirmation = () => {
 		if (!showConfirmation) return null
 
 		return (
 			<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-				<div className="bg-white rounded-lg p-6 max-w-md w-full">
-					<h3 className="text-xl font-bold mb-4">Confirm Submission</h3>
-					<p className="mb-6">Are you sure you want to submit your flat listing? This action cannot be undone.</p>
-					<div className="flex justify-end gap-3">
+				<Card className="bg-white border rounded-lg max-w-md w-full">
+					<CardHeader>
+						<CardTitle className="text-xl font-bold">Confirm Submission</CardTitle>
+						<CardDescription>Are you sure you want to submit your flat listing? This action cannot be undone.</CardDescription>
+					</CardHeader>
+					<CardFooter className="flex justify-end gap-3">
 						<Button variant="outline" onClick={() => setShowConfirmation(false)}>
 							Cancel
 						</Button>
 						<Button onClick={confirmSubmission} disabled={loading} className="bg-green-600 hover:bg-green-700">
 							{loading ? 'Submitting...' : 'Yes, Submit Listing'}
 						</Button>
-					</div>
-				</div>
+					</CardFooter>
+				</Card>
 			</div>
 		)
 	}
 
 	return (
-		<form onSubmit={handleSubmit} className="pb-16">
+		<div className="pb-16">
 			<div className="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-4 sm:p-6 md:p-8 mt-6">
 				<h1 className="text-center text-2xl sm:text-3xl font-bold text-gray-800 mb-6">List Your Flat</h1>
 
@@ -667,13 +688,13 @@ export default function FlatForm() {
 							Next
 						</Button>
 					) : (
-						<Button type="submit" className="bg-green-600 hover:bg-green-700">
+						<Button type="button" onClick={handleSubmit} className="bg-green-600 hover:bg-green-700">
 							Review & Submit Listing
 						</Button>
 					)}
 				</div>
 			</div>
 			{renderConfirmation()}
-		</form>
+		</div>
 	)
 }

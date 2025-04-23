@@ -70,7 +70,7 @@ export default function Navbar() {
 				<div className="hidden md:block">
 					{!session?.user && (
 						<Link href={'/host/homes'} className={buttonVariants({ variant: 'link' })}>
-							Rent Property
+							House Owner
 						</Link>
 					)}
 

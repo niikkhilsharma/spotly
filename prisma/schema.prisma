@@ -115,7 +115,8 @@ model Flat {
   bhk                  String
   price                String
   state                String
-  district             String
+  city                 String
+  mapLocation          String
   landmark             String
   pincode              String
   title                String
@@ -128,7 +129,7 @@ model Flat {
   isApproved           Boolean  @default(false)
   isActive             Boolean  @default(true)
   userId               String
-  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                 User     @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
