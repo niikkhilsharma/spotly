@@ -11,6 +11,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { X, Upload, CheckCircle, AlertCircle } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 
+
 interface GardenData {
 	 comboPackage: string;
      customPrice?: string;
